@@ -15,6 +15,7 @@ let webcam;
 let animationFrameId;
 let midiAccess;
 let lastSentValue = null;
+let loopActive = false;
 
 /** Per-class MIDI mapping: className → { outputId, channel, cc } */
 const classMidiMap = new Map();
@@ -49,7 +50,7 @@ function percentToMidi(percent) {
 }
 
 function defaultCcNumber() {
-  const cc = Number(ccNumberInput.value);
+  const cc = Number(ccNumberInput?.value);
   if (!Number.isInteger(cc) || cc < 0 || cc > 127) {
     return 1;
   }
@@ -193,6 +194,7 @@ function sendMidiValue(value, className, confidence) {
 }
 
 function stopLoop() {
+  loopActive = false;
   if (animationFrameId) {
     cancelAnimationFrame(animationFrameId);
     animationFrameId = null;
@@ -201,12 +203,17 @@ function stopLoop() {
 
 async function startPredictionLoop() {
   stopLoop();
+  loopActive = true;
 
   const loop = async () => {
+    if (!loopActive) return;
     try {
+      if (!webcam || !webcam.canvas || !model) {
+        return;
+      }
       webcam.update();
       const predictions = await model.predict(webcam.canvas);
-      if (!predictions?.length) {
+      if (!loopActive || !predictions?.length) {
         return;
       }
 
@@ -231,7 +238,9 @@ async function startPredictionLoop() {
     } catch (error) {
       predictionText.textContent = `Prediction error: ${error.message}`;
     } finally {
-      animationFrameId = requestAnimationFrame(loop);
+      if (loopActive) {
+        animationFrameId = requestAnimationFrame(loop);
+      }
     }
   };
 
@@ -241,6 +250,7 @@ async function startPredictionLoop() {
 loadModelButton.addEventListener("click", async () => {
   try {
     loadModelButton.disabled = true;
+    stopLoop();
 
     const modelBase = normalizeModelBaseUrl(modelUrlInput.value);
     model = await tmImage.load(`${modelBase}model.json`, `${modelBase}metadata.json`);
