@@ -8,7 +8,7 @@ Web app bridge from a Teachable Machine image model to Web MIDI.
 - Uses webcam inference in the browser
 - Expects class names like `0%`, `5%`, `10%`, ... `100%`
 - Finds the most confident class each frame
-- Sends that percentage value as a MIDI CC value (`0-100`) on one selected channel and one selected output port
+- Sends that percentage value directly as a MIDI CC data value (`0-100`, valid subset of MIDI `0-127`) on one selected channel and one selected output port
 
 ## Usage
 
