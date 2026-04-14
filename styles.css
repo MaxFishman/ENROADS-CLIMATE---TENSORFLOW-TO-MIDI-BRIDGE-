@@ -1,45 +1,330 @@
 :root {
-  color-scheme: light dark;
-  font-family: system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  --bg-primary: #0d1117;
+  --bg-secondary: #161b22;
+  --bg-tertiary: #1c2128;
+  --bg-input: #0d1117;
+  --border-color: #30363d;
+  --border-hover: #484f58;
+  --text-primary: #e6edf3;
+  --text-secondary: #8b949e;
+  --text-muted: #6e7681;
+  --accent: #58a6ff;
+  --accent-hover: #79c0ff;
+  --accent-bg: rgba(56, 139, 253, 0.15);
+  --success: #3fb950;
+  --warning: #d29922;
+  --danger: #f85149;
+  --radius: 12px;
+  --radius-sm: 8px;
+  --shadow: 0 2px 8px rgba(0, 0, 0, 0.3);
+  font-family: 'Inter', system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial, sans-serif;
+  color-scheme: dark;
+}
+
+* {
+  box-sizing: border-box;
 }
 
 body {
   margin: 0;
+  background: var(--bg-primary);
+  color: var(--text-primary);
+  line-height: 1.6;
 }
 
 main {
-  max-width: 900px;
+  max-width: 960px;
   margin: 0 auto;
-  padding: 1.5rem;
+  padding: 2rem 1.5rem;
+}
+
+h1 {
+  font-size: 1.75rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  margin: 0 0 0.25rem;
+  background: linear-gradient(135deg, var(--accent), #a371f7);
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  background-clip: text;
+}
+
+h1 + p {
+  color: var(--text-secondary);
+  margin: 0 0 1.5rem;
+  font-size: 0.95rem;
+}
+
+h2 {
+  font-size: 1.1rem;
+  font-weight: 600;
+  margin: 0 0 0.75rem;
+  color: var(--text-primary);
 }
 
 .panel {
-  border: 1px solid #80808066;
-  border-radius: 8px;
-  padding: 1rem;
+  background: var(--bg-secondary);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius);
+  padding: 1.25rem;
   margin-bottom: 1rem;
   display: grid;
+  gap: 0.6rem;
+  box-shadow: var(--shadow);
+  transition: border-color 0.2s ease;
+}
+
+.panel:hover {
+  border-color: var(--border-hover);
+}
+
+.panel-header {
+  display: flex;
+  align-items: center;
   gap: 0.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.panel-header .icon {
+  font-size: 1.2rem;
+}
+
+.panel-header h2 {
+  margin: 0;
 }
 
 .two-col {
-  grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
+  grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   align-items: start;
 }
 
+label {
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text-secondary);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+}
+
 input,
-select,
+select {
+  font: inherit;
+  font-size: 0.95rem;
+  padding: 0.55rem 0.75rem;
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  color: var(--text-primary);
+  outline: none;
+  transition: border-color 0.2s ease, box-shadow 0.2s ease;
+}
+
+input:focus,
+select:focus {
+  border-color: var(--accent);
+  box-shadow: 0 0 0 3px var(--accent-bg);
+}
+
+input::placeholder {
+  color: var(--text-muted);
+}
+
 button {
   font: inherit;
-  padding: 0.45rem 0.55rem;
+  font-size: 0.95rem;
+  font-weight: 600;
+  padding: 0.6rem 1.2rem;
+  border: none;
+  border-radius: var(--radius-sm);
+  cursor: pointer;
+  transition: all 0.2s ease;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+}
+
+button.btn-primary {
+  background: linear-gradient(135deg, #388bfd, #a371f7);
+  color: #fff;
+}
+
+button.btn-primary:hover:not(:disabled) {
+  background: linear-gradient(135deg, #58a6ff, #bc8cff);
+  box-shadow: 0 4px 12px rgba(56, 139, 253, 0.3);
+}
+
+button.btn-secondary {
+  background: var(--bg-tertiary);
+  color: var(--text-primary);
+  border: 1px solid var(--border-color);
+}
+
+button.btn-secondary:hover:not(:disabled) {
+  background: var(--border-color);
+  border-color: var(--border-hover);
+}
+
+button:disabled {
+  opacity: 0.5;
+  cursor: not-allowed;
 }
 
 #camera-host canvas {
   width: 100%;
   max-width: 320px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
 }
 
 code {
   font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+  font-size: 0.88em;
+  background: var(--bg-tertiary);
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  color: var(--accent);
+}
+
+#prediction-text,
+#midi-text {
+  font-size: 0.95rem;
+  padding: 0.6rem 0.85rem;
+  background: var(--bg-tertiary);
+  border-radius: var(--radius-sm);
+  border: 1px solid var(--border-color);
+  margin: 0.4rem 0;
+  word-break: break-word;
+}
+
+#midi-text {
+  color: var(--success);
+}
+
+/* ── Per-class MIDI mapping ── */
+#class-mappings {
+  display: none;
+}
+
+#class-mappings.visible {
+  display: grid;
+}
+
+.mapping-table {
+  width: 100%;
+  border-collapse: separate;
+  border-spacing: 0;
+  font-size: 0.9rem;
+}
+
+.mapping-table thead th {
+  text-align: left;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-muted);
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.mapping-table tbody tr {
+  transition: background 0.15s ease;
+}
+
+.mapping-table tbody tr:hover {
+  background: var(--accent-bg);
+}
+
+.mapping-table td {
+  padding: 0.5rem 0.75rem;
+  border-bottom: 1px solid var(--border-color);
+  vertical-align: middle;
+}
+
+.mapping-table td:first-child {
+  font-weight: 600;
+  color: var(--accent);
+}
+
+.mapping-table select,
+.mapping-table input {
+  width: 100%;
+  font-size: 0.85rem;
+  padding: 0.35rem 0.5rem;
+}
+
+.mapping-table input[type="number"] {
+  width: 70px;
+}
+
+.badge {
+  display: inline-block;
+  padding: 0.15em 0.5em;
+  font-size: 0.8rem;
+  font-weight: 600;
+  border-radius: 9999px;
+  background: var(--accent-bg);
+  color: var(--accent);
+}
+
+/* ── Status bar ── */
+.status-bar {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--text-secondary);
+  padding: 0.4rem 0;
+}
+
+.status-dot {
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: var(--text-muted);
+  flex-shrink: 0;
+}
+
+.status-dot.active {
+  background: var(--success);
+  box-shadow: 0 0 6px rgba(63, 185, 80, 0.5);
+}
+
+/* ── Scrollbar ── */
+::-webkit-scrollbar {
+  width: 8px;
+  height: 8px;
+}
+
+::-webkit-scrollbar-track {
+  background: var(--bg-primary);
+}
+
+::-webkit-scrollbar-thumb {
+  background: var(--border-color);
+  border-radius: 4px;
+}
+
+::-webkit-scrollbar-thumb:hover {
+  background: var(--border-hover);
+}
+
+/* ── Responsive ── */
+@media (max-width: 600px) {
+  main {
+    padding: 1rem;
+  }
+
+  h1 {
+    font-size: 1.35rem;
+  }
+
+  .mapping-table {
+    font-size: 0.8rem;
+  }
+
+  .mapping-table select,
+  .mapping-table input {
+    font-size: 0.78rem;
+  }
 }
