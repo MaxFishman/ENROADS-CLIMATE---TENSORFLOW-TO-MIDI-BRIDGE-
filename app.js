@@ -21,7 +21,7 @@ let loopActive = false;
 const classMidiMap = new Map();
 
 /**
- * Shared MIDI mapping for all percentage classes (0 %, 5 %, …, 100 %).
+ * Shared MIDI mapping for all percentage classes (0%, 5%, …, 100%).
  * Every percentage class uses the same output port, channel and CC number;
  * only the CC **value** (0-127) changes based on the percentage.
  */
@@ -123,7 +123,7 @@ function buildClassMappingRows(classNames) {
     }
   }
 
-  /* --- Shared row for ALL percentage classes (0 %–100 %) --------------- */
+  /* --- Shared row for ALL percentage classes (0%–100%) --------------- */
   if (percentClasses.length) {
     percentGroupMapping.outputId = "";
     percentGroupMapping.channel = 1;
