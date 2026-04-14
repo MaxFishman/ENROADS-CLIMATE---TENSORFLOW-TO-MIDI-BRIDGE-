@@ -9,6 +9,7 @@ Web app bridge from a Teachable Machine image model to Web MIDI.
 - Expects class names like `0%`, `5%`, `10%`, ... `100%`
 - Finds the most confident class each frame
 - Sends that percentage value directly as a MIDI CC data value (`0-100`, valid subset of MIDI `0-127`) on one selected channel and one selected output port
+  - This is intentional so each model class maps 1:1 to its labeled percentage.
 
 ## Usage
 

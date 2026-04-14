@@ -184,9 +184,9 @@ enableMidiButton.addEventListener("click", async () => {
   }
 });
 
-window.addEventListener("beforeunload", async () => {
+window.addEventListener("beforeunload", () => {
   stopLoop();
   if (webcam) {
-    await webcam.stop();
+    webcam.stop();
   }
 });
