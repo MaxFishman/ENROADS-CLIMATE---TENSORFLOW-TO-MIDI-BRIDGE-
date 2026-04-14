@@ -44,6 +44,10 @@ function parsePercentageFromClassName(className) {
   return value;
 }
 
+function percentToMidi(percent) {
+  return Math.round((percent / 100) * 127);
+}
+
 function defaultCcNumber() {
   const cc = Number(ccNumberInput.value);
   if (!Number.isInteger(cc) || cc < 0 || cc > 127) {
@@ -216,11 +220,12 @@ async function startPredictionLoop() {
       if (percentageValue === null) {
         predictionText.textContent = `Top class '${top.className}' (${confidenceText}) is not a valid 0-100 percentage in steps of 5.`;
       } else {
+        const midiValue = percentToMidi(percentageValue);
         predictionText.textContent =
-          `Top class: ${top.className} (${confidenceText}) → MIDI value ${percentageValue}`;
-        if (percentageValue !== lastSentValue) {
-          sendMidiValue(percentageValue, top.className, top.probability);
-          lastSentValue = percentageValue;
+          `Top class: ${top.className} (${confidenceText}) → MIDI value ${midiValue}`;
+        if (midiValue !== lastSentValue) {
+          sendMidiValue(midiValue, top.className, top.probability);
+          lastSentValue = midiValue;
         }
       }
     } catch (error) {
