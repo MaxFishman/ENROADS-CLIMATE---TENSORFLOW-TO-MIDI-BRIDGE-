@@ -240,9 +240,13 @@ loadModelButton.addEventListener("click", async () => {
     const modelBase = normalizeModelBaseUrl(modelUrlInput.value);
     model = await tmImage.load(`${modelBase}model.json`, `${modelBase}metadata.json`);
 
-    const classNames = model.getClassLabels ? model.getClassLabels() : [];
+    const classNames = typeof model.getClassLabels === "function"
+      ? model.getClassLabels()
+      : [];
     if (classNames.length) {
       buildClassMappingRows(classNames);
+    } else {
+      predictionText.textContent = "Model loaded but no class labels found — per-class mapping unavailable.";
     }
 
     if (webcam) {
