@@ -20,6 +20,13 @@ let loopActive = false;
 /** Per-class MIDI mapping: className → { outputId, channel, cc } */
 const classMidiMap = new Map();
 
+/**
+ * Shared MIDI mapping for all percentage classes (0 %, 5 %, …, 100 %).
+ * Every percentage class uses the same output port, channel and CC number;
+ * only the CC **value** (0-127) changes based on the percentage.
+ */
+const percentGroupMapping = { outputId: "", channel: 1, cc: 1 };
+
 function normalizeModelBaseUrl(rawUrl) {
   const trimmed = rawUrl.trim();
   if (!trimmed) {
@@ -104,7 +111,81 @@ function buildClassMappingRows(classNames) {
   mappingBody.innerHTML = "";
 
   const defaultCc = defaultCcNumber();
+
+  /* Separate percentage classes from any non-percentage classes */
+  const percentClasses = [];
+  const otherClasses = [];
   for (const name of classNames) {
+    if (parsePercentageFromClassName(name) !== null) {
+      percentClasses.push(name);
+    } else {
+      otherClasses.push(name);
+    }
+  }
+
+  /* --- Shared row for ALL percentage classes (0 %–100 %) --------------- */
+  if (percentClasses.length) {
+    percentGroupMapping.outputId = "";
+    percentGroupMapping.channel = 1;
+    percentGroupMapping.cc = defaultCc;
+
+    /* Point every percentage class at the shared mapping */
+    for (const name of percentClasses) {
+      classMidiMap.set(name, percentGroupMapping);
+    }
+
+    const tr = document.createElement("tr");
+    tr.dataset.percentGroup = "true";
+
+    const tdName = document.createElement("td");
+    tdName.textContent = `All % classes (${percentClasses[0]}–${percentClasses[percentClasses.length - 1]})`;
+    tdName.title = percentClasses.join(", ");
+    tr.appendChild(tdName);
+
+    const tdPort = document.createElement("td");
+    const portSelect = document.createElement("select");
+    portSelect.innerHTML = buildOutputOptions("");
+    portSelect.addEventListener("change", () => {
+      percentGroupMapping.outputId = portSelect.value;
+    });
+    tdPort.appendChild(portSelect);
+    tr.appendChild(tdPort);
+
+    const tdChannel = document.createElement("td");
+    const channelInput = document.createElement("input");
+    channelInput.type = "number";
+    channelInput.min = "1";
+    channelInput.max = "16";
+    channelInput.value = "1";
+    channelInput.addEventListener("change", () => {
+      const v = Number(channelInput.value);
+      if (Number.isInteger(v) && v >= 1 && v <= 16) {
+        percentGroupMapping.channel = v;
+      }
+    });
+    tdChannel.appendChild(channelInput);
+    tr.appendChild(tdChannel);
+
+    const tdCc = document.createElement("td");
+    const ccInput = document.createElement("input");
+    ccInput.type = "number";
+    ccInput.min = "0";
+    ccInput.max = "127";
+    ccInput.value = String(defaultCc);
+    ccInput.addEventListener("change", () => {
+      const v = Number(ccInput.value);
+      if (Number.isInteger(v) && v >= 0 && v <= 127) {
+        percentGroupMapping.cc = v;
+      }
+    });
+    tdCc.appendChild(ccInput);
+    tr.appendChild(tdCc);
+
+    mappingBody.appendChild(tr);
+  }
+
+  /* --- Individual rows for any non-percentage classes ------------------- */
+  for (const name of otherClasses) {
     classMidiMap.set(name, { outputId: "", channel: 1, cc: defaultCc });
 
     const tr = document.createElement("tr");
@@ -159,13 +240,21 @@ function buildClassMappingRows(classNames) {
 }
 
 function refreshMappingPortSelects() {
-  const selects = mappingBody.querySelectorAll("select");
   const rows = mappingBody.querySelectorAll("tr");
-  rows.forEach((row, i) => {
-    const className = row.querySelector("td:first-child")?.textContent;
-    if (!className) return;
-    const currentId = classMidiMap.get(className)?.outputId || "";
-    selects[i].innerHTML = buildOutputOptions(currentId);
+  rows.forEach((row) => {
+    const select = row.querySelector("select");
+    if (!select) return;
+
+    let currentId = "";
+    if (row.dataset.percentGroup === "true") {
+      currentId = percentGroupMapping.outputId || "";
+    } else {
+      const className = row.querySelector("td:first-child")?.textContent;
+      if (className) {
+        currentId = classMidiMap.get(className)?.outputId || "";
+      }
+    }
+    select.innerHTML = buildOutputOptions(currentId);
   });
 }
 
