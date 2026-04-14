@@ -28,7 +28,9 @@ function normalizeModelBaseUrl(rawUrl) {
 }
 
 function parsePercentageFromClassName(className) {
-  const match = String(className).trim().match(/^(100|[1-9]?[05])\s*%$/);
+  const match = String(className)
+    .trim()
+    .match(/^(0|5|[1-9]0|[1-9]5|100)\s*%$/);
   if (!match) {
     return null;
   }
@@ -155,7 +157,8 @@ loadModelButton.addEventListener("click", async () => {
       cameraHost.innerHTML = "";
     }
 
-    webcam = new tmImage.Webcam(320, 240, true);
+    const flip = true;
+    webcam = new tmImage.Webcam(320, 240, flip);
     await webcam.setup();
     await webcam.play();
     cameraHost.append(webcam.canvas);
