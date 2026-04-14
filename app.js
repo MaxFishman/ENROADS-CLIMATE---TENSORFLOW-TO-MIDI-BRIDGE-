@@ -28,16 +28,12 @@ function normalizeModelBaseUrl(rawUrl) {
 }
 
 function parsePercentageFromClassName(className) {
-  const match = String(className).trim().match(/^(\d{1,2}|100)\s*%$/);
+  const match = String(className).trim().match(/^(100|[1-9]?[05])\s*%$/);
   if (!match) {
     return null;
   }
 
   const value = Number(match[1]);
-  if (value < 0 || value > 100 || value % 5 !== 0) {
-    return null;
-  }
-
   return value;
 }
 
@@ -113,31 +109,35 @@ async function startPredictionLoop() {
   stopLoop();
 
   const loop = async () => {
-    webcam.update();
-    const predictions = await model.predict(webcam.canvas);
-    if (!predictions?.length) {
-      animationFrameId = requestAnimationFrame(loop);
-      return;
-    }
-
-    const top = predictions.reduce((best, item) =>
-      item.probability > best.probability ? item : best,
-    );
-
-    const percentageValue = parsePercentageFromClassName(top.className);
-    const confidenceText = `${(top.probability * 100).toFixed(1)}%`;
-
-    if (percentageValue === null) {
-      predictionText.textContent = `Top class '${top.className}' (${confidenceText}) is not a valid 0-100 percentage in steps of 5.`;
-    } else {
-      predictionText.textContent = `Top class: ${top.className} (${confidenceText}) → MIDI value ${percentageValue}`;
-      if (percentageValue !== lastSentValue) {
-        sendMidiValue(percentageValue, top.className, top.probability);
-        lastSentValue = percentageValue;
+    try {
+      webcam.update();
+      const predictions = await model.predict(webcam.canvas);
+      if (!predictions?.length) {
+        return;
       }
-    }
 
-    animationFrameId = requestAnimationFrame(loop);
+      const top = predictions.reduce((best, item) =>
+        item.probability > best.probability ? item : best,
+      );
+
+      const percentageValue = parsePercentageFromClassName(top.className);
+      const confidenceText = `${(top.probability * 100).toFixed(1)}%`;
+
+      if (percentageValue === null) {
+        predictionText.textContent = `Top class '${top.className}' (${confidenceText}) is not a valid 0-100 percentage in steps of 5.`;
+      } else {
+        predictionText.textContent =
+          `Top class: ${top.className} (${confidenceText}) → MIDI value ${percentageValue}`;
+        if (percentageValue !== lastSentValue) {
+          sendMidiValue(percentageValue, top.className, top.probability);
+          lastSentValue = percentageValue;
+        }
+      }
+    } catch (error) {
+      predictionText.textContent = `Prediction error: ${error.message}`;
+    } finally {
+      animationFrameId = requestAnimationFrame(loop);
+    }
   };
 
   loop();
