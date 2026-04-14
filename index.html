@@ -1,0 +1,56 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Teachable Machine to MIDI Bridge</title>
+    <link rel="stylesheet" href="./styles.css" />
+  </head>
+  <body>
+    <main>
+      <h1>Teachable Machine Image → MIDI</h1>
+      <p>
+        Loads a Teachable Machine image model whose classes are percentages
+        (<code>0%</code>, <code>5%</code>, …, <code>100%</code>) and sends the
+        most confident class value as MIDI data.
+      </p>
+
+      <section class="panel">
+        <label for="model-url">Model URL (model.json or model base URL)</label>
+        <input id="model-url" type="text" placeholder="https://teachablemachine.withgoogle.com/models/XXXX/" />
+        <button id="load-model" type="button">Load Model + Start Camera</button>
+      </section>
+
+      <section class="panel">
+        <button id="enable-midi" type="button">Enable MIDI</button>
+
+        <label for="midi-output">MIDI Output Port</label>
+        <select id="midi-output" disabled>
+          <option value="">No MIDI outputs found</option>
+        </select>
+
+        <label for="midi-channel">MIDI Channel (1-16)</label>
+        <input id="midi-channel" type="number" min="1" max="16" value="1" />
+
+        <label for="cc-number">CC Number (0-127)</label>
+        <input id="cc-number" type="number" min="0" max="127" value="1" />
+      </section>
+
+      <section class="panel two-col">
+        <div>
+          <h2>Camera</h2>
+          <div id="camera-host"></div>
+        </div>
+        <div>
+          <h2>Prediction</h2>
+          <p id="prediction-text">No prediction yet.</p>
+          <p id="midi-text">No MIDI message sent yet.</p>
+        </div>
+      </section>
+    </main>
+
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@latest/dist/tf.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@teachablemachine/image@latest/dist/teachablemachine-image.min.js"></script>
+    <script type="module" src="./app.js"></script>
+  </body>
+</html>
