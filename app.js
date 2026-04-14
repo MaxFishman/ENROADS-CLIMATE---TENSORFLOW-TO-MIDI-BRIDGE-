@@ -28,7 +28,7 @@ function normalizeModelBaseUrl(rawUrl) {
 }
 
 function parsePercentageFromClassName(className) {
-  const match = String(className).trim().match(/^(\d{1,2}|100)\s*%?$/);
+  const match = String(className).trim().match(/^(\d{1,2}|100)\s*%$/);
   if (!match) {
     return null;
   }
