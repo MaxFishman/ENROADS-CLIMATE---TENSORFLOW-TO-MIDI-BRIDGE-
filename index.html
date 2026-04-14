@@ -4,6 +4,9 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Teachable Machine to MIDI Bridge</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
@@ -16,33 +19,67 @@
       </p>
 
       <section class="panel">
+        <div class="panel-header">
+          <span class="icon">🧠</span>
+          <h2>Model</h2>
+        </div>
         <label for="model-url">Model URL (model.json or model base URL)</label>
         <input id="model-url" type="text" placeholder="https://teachablemachine.withgoogle.com/models/XXXX/" />
-        <button id="load-model" type="button">Load Model + Start Camera</button>
+        <button id="load-model" class="btn-primary" type="button">▶ Load Model + Start Camera</button>
       </section>
 
       <section class="panel">
-        <button id="enable-midi" type="button">Enable MIDI</button>
+        <div class="panel-header">
+          <span class="icon">🎹</span>
+          <h2>MIDI</h2>
+        </div>
+        <button id="enable-midi" class="btn-secondary" type="button">⚡ Enable MIDI</button>
 
-        <label for="midi-output">MIDI Output Port</label>
-        <select id="midi-output" disabled>
-          <option value="">No MIDI outputs found</option>
-        </select>
+        <div class="status-bar">
+          <span id="midi-status-dot" class="status-dot"></span>
+          <span id="midi-status-label">MIDI not connected</span>
+        </div>
 
-        <label for="midi-channel">MIDI Channel (1-16)</label>
-        <input id="midi-channel" type="number" min="1" max="16" value="1" />
-
-        <label for="cc-number">CC Number (0-127)</label>
+        <label for="cc-number">Default CC Number (0-127)</label>
         <input id="cc-number" type="number" min="0" max="127" value="1" />
+      </section>
+
+      <section id="class-mappings" class="panel">
+        <div class="panel-header">
+          <span class="icon">🎛️</span>
+          <h2>Per-Class MIDI Mapping</h2>
+        </div>
+        <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">
+          Assign a MIDI output port and channel for each model class. Leave defaults to use the same output for all.
+        </p>
+        <div style="overflow-x: auto;">
+          <table class="mapping-table">
+            <thead>
+              <tr>
+                <th>Class</th>
+                <th>MIDI Output</th>
+                <th>Channel</th>
+                <th>CC #</th>
+              </tr>
+            </thead>
+            <tbody id="mapping-body"></tbody>
+          </table>
+        </div>
       </section>
 
       <section class="panel two-col">
         <div>
-          <h2>Camera</h2>
+          <div class="panel-header">
+            <span class="icon">📷</span>
+            <h2>Camera</h2>
+          </div>
           <div id="camera-host"></div>
         </div>
         <div>
-          <h2>Prediction</h2>
+          <div class="panel-header">
+            <span class="icon">📊</span>
+            <h2>Prediction</h2>
+          </div>
           <p id="prediction-text">No prediction yet.</p>
           <p id="midi-text">No MIDI message sent yet.</p>
         </div>
