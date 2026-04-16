@@ -6,12 +6,15 @@
     <title>Teachable Machine to MIDI Bridge</title>
     <link rel="preconnect" href="https://fonts.googleapis.com" />
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet" />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap"
+      rel="stylesheet"
+    />
     <link rel="stylesheet" href="./styles.css" />
   </head>
   <body>
     <main>
-      <h1>Teachable Machine Image → MIDI</h1>
+      <h1>ENROADS CLIMATE - Teachable Machine Image → MIDI</h1>
       <p>
         Loads a Teachable Machine image model whose classes are percentages
         (<code>0%</code>, <code>5%</code>, …, <code>100%</code>) and sends the
@@ -24,8 +27,14 @@
           <h2>Model</h2>
         </div>
         <label for="model-url">Model URL (model.json or model base URL)</label>
-        <input id="model-url" type="text" placeholder="https://teachablemachine.withgoogle.com/models/XXXX/" />
-        <button id="load-model" class="btn-primary" type="button">▶ Load Model + Start Camera</button>
+        <input
+          id="model-url"
+          type="text"
+          placeholder="https://teachablemachine.withgoogle.com/models/XXXX/"
+        />
+        <button id="load-model" class="btn-primary" type="button">
+          ▶ Load Model + Start Camera
+        </button>
       </section>
 
       <section class="panel">
@@ -33,7 +42,9 @@
           <span class="icon">🎹</span>
           <h2>MIDI</h2>
         </div>
-        <button id="enable-midi" class="btn-secondary" type="button">⚡ Enable MIDI</button>
+        <button id="enable-midi" class="btn-secondary" type="button">
+          ⚡ Enable MIDI
+        </button>
 
         <div class="status-bar">
           <span id="midi-status-dot" class="status-dot"></span>
@@ -49,10 +60,11 @@
           <span class="icon">🎛️</span>
           <h2>Per-Class MIDI Mapping</h2>
         </div>
-        <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem;">
-          Assign a MIDI output port and channel for each model class. Leave defaults to use the same output for all.
+        <p style="color: var(--text-secondary); margin: 0; font-size: 0.9rem">
+          Assign a MIDI output port and channel for each model class. Leave
+          defaults to use the same output for all.
         </p>
-        <div style="overflow-x: auto;">
+        <div style="overflow-x: auto">
           <table class="mapping-table">
             <thead>
               <tr>
